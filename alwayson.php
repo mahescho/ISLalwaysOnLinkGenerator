@@ -16,7 +16,7 @@
         <?php
 
 //
-// 02/2022 Matthias Henze
+// 02/2023 Matthias Henze
 //
 
 //error_reporting(E_ALL);
