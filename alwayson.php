@@ -15,6 +15,10 @@
         <p></p>
         <?php
 
+//
+// 02/2022 Matthias Henze
+//
+
 //error_reporting(E_ALL);
 //ini_set("display_errors", 1);
 //echo var_dump($_GET);
