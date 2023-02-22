@@ -11,7 +11,7 @@
     <body style="border: 40px solid white;">
         <h2>ISL AlwaysOn Generator</h2>
         <p></p>
-        <p>See: <a href="https://help.islonline.com/19824/165972">ISL Documentation</a></p>
+        <p>See: <a href="https://help.islonline.com/19824/165972">ISL Documentation</a>, <a href="https://help.islonline.com/19818/1038945">Silent Setup</a></p>
         <p></p>
         <?php
 
@@ -56,19 +56,29 @@ if ( !empty( $_GET['base_url']) ) {
                 }
                 break;
             case 'grant_password' :
-                $options .= 'grant_password "' . $value . '" ';
+                if (strlen($value) > 0) {
+                    $options .= 'grant_password "' . $value . '" ';
+                }
                 break;
             case 'password' :
-                $options .= 'password "' . $value . '" ';
+                if (strlen($value) > 0) {
+                    $options .= 'password "' . $value . '" ';
+                }
                 break;
             case 'record_path' :
-                $options .= 'record_path "' . $value . '" ';
+                if (strlen($value) > 0) {
+                    $options .= 'record_path "' . $value . '" ';
+                }
                 break;
             case 'share_path' :
-                $options .= 'share_path "' . $value . '" ';
+                if (strlen($value) > 0) {
+                    $options .= 'share_path "' . $value . '" ';
+                }
                 break;
             case 'description' :
-                $options .= 'description "' . $value . '" ';
+                if (strlen($value) > 0) {
+                    $options .= 'description "' . $value . '" ';
+                }
                 break;
             case 'push_upgrade' :
                 switch ($value) {
@@ -97,13 +107,20 @@ if ( !empty( $_GET['base_url']) ) {
                         break;
                 }
                 break;
+            case 'ignore_system_account' :
+                switch ($value) {
+                    case '1' :
+                        $options .= 'ignore_system_account ';
+                        break;
+                }
+                break;
             default :
                 break;
         }
     }
 
     $result = $u[0] . "=" . urlencode(trim($options)) . '+' . $u[1];
-    echo '<b>Generated URL:</b><br><br><a href="' . $result . '">' . substr($result,0,50) . '...' . '</a>';
+    echo '<b>Generated URL:</b><br><br>' . $result;
     echo "<p></<p>";
     echo "<p><a href='alwayson.php'>Reset Form</a></<p>";
     echo "<p></<p>";
@@ -112,7 +129,9 @@ if ( !empty( $_GET['base_url']) ) {
         <form action="alwayson.php">
             <div class="rendered-form">
                 <div class="formbuilder-textarea form-group field-grant_blob">
-                    <label for="base_url" class="formbuilder-textarea-label"><b>Base URL<span class="formbuilder-required">*</span></b></label>
+                    <label for="base_url" class="formbuilder-textarea-label"><b>Base URL<span class="formbuilder-required">*</span></b><br>
+                    https://<server_address>/download/ISLAlwaysOn?cmdline=%2FVERYSILENT+grant_silent+%22<grant_blob>%22+password+%22<password>%22+ignore_system_account
+                </label>
                     <br><textarea type="textarea" name="base_url" access="false" id="base_url" required="required" aria-required="true" cols="40" rows="5"><?php echo $_GET['base_url']; ?></textarea>
                 </div>
                 <p></p>
@@ -226,6 +245,18 @@ if ( !empty( $_GET['base_url']) ) {
                         <div class="formbuilder-checkbox">
                             <input name="skip_check_start" access="false" id="skip_check_start-0" value="1" type="checkbox" <?php if ($_GET['skip_check_start'] == '1') { echo 'checked="checked"'; }?>>
                             <label for="skip_check_start-0">skip start check</label>
+                        </div>
+                    </div>
+                </div>
+                <p></p>
+                <div class="formbuilder-checkbox-group form-group field-ignore_system_account">
+                    <label for="ignore_system_account" class="formbuilder-checkbox-group-label"><b>Ignore Sytem Account</b><br>Required for MSI like silent setups.
+                        <br>
+                    </label>
+                    <div class="checkbox-group">
+                        <div class="formbuilder-checkbox">
+                            <input name="ignore_system_account" access="false" id="ignore_system_account-0" value="1" type="checkbox" <?php if ($_GET['ignore_system_account'] == '1') { echo 'checked="checked"'; }?>>
+                            <label for="ignore_system_account-0">ignore system account</label>
                         </div>
                     </div>
                 </div>
