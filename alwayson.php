@@ -23,8 +23,23 @@
 //ini_set("display_errors", 1);
 //echo var_dump($_GET);
 
+if ( empty($_GET['download_type']) ) {
+    $download_type = "start";
+}
+else {
+    $download_type = $_GET['download_type'];
+}
+
 if ( !empty( $_GET['base_url']) ) {
+
     $base_url = $_GET['base_url'];
+
+    if ( str_contains($base_url,'start')) {
+        $base_url = str_replace('/start/','/'.$download_type.'/',$base_url);
+    }
+    elseif ( str_contains($base_url,'download')) {
+        $base_url = str_replace('/download/','/'.$download_type.'/',$base_url);
+    }
 
     if ( !empty($_GET['grant_mode']) ) {
         switch ($_GET['grant_mode']) {
@@ -120,7 +135,8 @@ if ( !empty( $_GET['base_url']) ) {
     }
 
     $result = $u[0] . "=" . urlencode(trim($options)) . '+' . $u[1];
-    echo '<b>Generated URL:</b><br><br>' . $result;
+
+    echo '<b>Generated URL:</b><br><br><a href="' . $result . '">' . $result . '</a>';
     echo "<p></<p>";
     echo "<p><a href='alwayson.php'>Reset Form</a></<p>";
     echo "<p></<p>";
@@ -130,9 +146,23 @@ if ( !empty( $_GET['base_url']) ) {
             <div class="rendered-form">
                 <div class="formbuilder-textarea form-group field-grant_blob">
                     <label for="base_url" class="formbuilder-textarea-label"><b>Base URL<span class="formbuilder-required">*</span></b><br>
-                    https://<server_address>/download/ISLAlwaysOn?cmdline=%2FVERYSILENT+grant_silent+%22<grant_blob>%22+password+%22<password>%22+ignore_system_account
                 </label>
                     <br><textarea type="textarea" name="base_url" access="false" id="base_url" required="required" aria-required="true" cols="40" rows="5"><?php echo $_GET['base_url']; ?></textarea>
+                </div>
+                <p></p>
+                <div class="formbuilder-radio-group form-group field-download_type">
+                    <label for="download_type" class="formbuilder-radio-group-label"><b>Type of binary<span class="formbuilder-required">*</span></b>
+                        <br>"download" creates a complete binary for silent deployment. "start" creates a minimal binary. </label>
+                    <div class="radio-group">
+                        <div class="formbuilder-radio">
+                            <input name="download_type" access="false" id="download_type-0" value="download" type="radio" <?php if ($download_type == 'download') { echo 'checked="checked"'; }?>>
+                            <label for="download_type-0">download</label>
+                        </div>
+                        <div class="formbuilder-radio">
+                            <input name="download_type" access="false" id="download_type-1" value="start" type="radio" <?php if ($download_type == 'start') { echo 'checked="checked"'; }?>>
+                            <label for="install_mode-1">start</label>
+                        </div>
+                    </div>
                 </div>
                 <p></p>
                 <div class="formbuilder-radio-group form-group field-grant_mode">
@@ -150,6 +180,7 @@ if ( !empty( $_GET['base_url']) ) {
                     </div>
                 </div>
                 <p></p>
+
                 <div class="formbuilder-radio-group form-group field-install_mode">
                     <label for="install_mode" class="formbuilder-radio-group-label"><b>Silent Install</b>
                         <br>Command line option /SILENT instructs the installer not to display the wizard and the background window. If you use /VERYSILENT, the installation progress window will not be displayed either. The setup will not be started when ISL AlwaysOn is already installed on that computer.</label>
